@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Limiter",
+  "version": "1.0",
+  "permissions": ["storage", "tabs", "webNavigation", "declarativeNetRequest"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "host_permissions": ["*://*.youtube.com/*"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "css": ["style.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["pagePatch.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}

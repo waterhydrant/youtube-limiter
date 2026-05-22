@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>YouTube Blocked</title>
+        <link rel="stylesheet" href="blocked.css" />
+    </head>
+
+    <body>
+        <main class="page">
+            <section class="card" aria-labelledby="blocked-title">
+                <div class="icon-wrap" aria-hidden="true">
+                    <div class="icon">Ⅱ</div>
+                </div>
+
+                <p class="eyebrow">Access paused</p>
+
+                <h1 id="blocked-title">YouTube is blocked right now.</h1>
+
+                <p id="blocked-message" class="message">
+                    This page is unavailable based on your current YouTube
+                    rules.
+                </p>
+
+                <p class="redirect-note">
+                    This is not a punishment. It is a boundary you set to
+                    protect your time, attention, and energy.
+                </p>
+
+                <div class="actions">
+                    <button
+                        id="close-tab-btn"
+                        class="primary-btn"
+                        type="button"
+                    >
+                        Close this tab
+                    </button>
+
+                    <button id="back-btn" class="secondary-btn" type="button">
+                        Go back
+                    </button>
+                </div>
+
+                <div class="suggestions" aria-labelledby="suggestions-title">
+                    <h2 id="suggestions-title">
+                        Do something lower-friction instead
+                    </h2>
+
+                    <ul>
+                        <li>Take a 5-minute walk.</li>
+                        <li>Drink water and reset your posture.</li>
+                        <li>Work on one tiny task for 10 minutes.</li>
+                        <li>
+                            Rest without opening another infinite-scroll app.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <script src="blocked.js"></script>
+    </body>
+</html>

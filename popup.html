@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            body {
+                width: 180px;
+                font-family: system-ui, -apple-system, sans-serif;
+                text-align: center;
+                padding: 15px;
+                margin: 0;
+            }
+
+            .stat {
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #f0f0f0; /* Soft separator */
+            }
+            
+            .stat:last-of-type {
+                border-bottom: none;
+                margin-bottom: 8px;
+            }
+
+            .label {
+                font-size: 11px;
+                color: #666;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 3px;
+            }
+
+            .status-text {
+                font-size: 22px;
+                font-weight: bold;
+                color: #28a745; /* Green for available */
+            }
+
+            .status-text.locked {
+                color: #dc3545; /* Red for used up/locked */
+            }
+
+            .count {
+                font-size: 24px; /* Slightly tamed down from 32px */
+                font-weight: bold;
+                color: #3b82f6;
+            }
+
+            .switch-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                cursor: pointer;
+                user-select: none;
+                margin-top: 10px;
+                padding-top: 8px;
+                border-top: 1px solid #f0f0f0;
+            }
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 46px;
+                height: 24px;
+                flex-shrink: 0;
+            }
+
+            .switch input { opacity: 0; width: 0; height: 0; }
+
+            .slider {
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-color: #ccc;
+                transition: 0.2s;
+                border-radius: 24px;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: 0.2s;
+                border-radius: 50%;
+            }
+
+            input:checked + .slider { background-color: #dc3545; } /* Red for Disabled state */
+            input:checked + .slider:before { transform: translateX(22px); }
+            .no-transition .slider, .no-transition .slider::before { transition: none !important; }
+            .label-text { font-size: 13px; font-weight: 500; color: #333; }
+        </style>
+    </head>
+
+    <body>
+        <div class="stat">
+            <div class="label">YouTube Status</div>
+            <!-- Toggle 'locked' class in JS when session is spent -->
+            <div id="displayStatus" class="status-text">Available</div>
+        </div>
+
+        <div class="stat">
+            <div class="label">Days Clean</div>
+            <div id="displayDaysSince" class="count">--</div>
+        </div>
+
+        <div class="stat">
+            <div class="label">Longest Streak</div>
+            <div id="displayLongestStreak" class="count">--</div>
+        </div>
+
+        <label class="switch-container no-transition" id="toggleContainer">
+            <span class="label-text">Emergency Block</span>
+            <div class="switch">
+                <input id="blockAllToggle" type="checkbox" />
+                <span class="slider"></span>
+            </div>
+        </label>
+
+        <script type="module" src="popup.js"></script>
+    </body>
+</html>
