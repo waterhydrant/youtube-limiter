@@ -1,5 +1,5 @@
-import { getDaysSinceLocalDate, getLocalDateKey } from "./dateUtils.js";
-import { STORAGE_KEYS } from "./storageKeys.js";
+import { getDaysSinceLocalDate, getLocalDateKey } from "./shared/dateUtils.js";
+import { STORAGE_KEYS } from "./shared/storageKeys.js";
 
 async function onStartup() {
   const today = getLocalDateKey();

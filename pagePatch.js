@@ -1,4 +1,7 @@
-import { BLOCKER_MESSAGE_TYPES } from "./blocker_messages.js";
+const BLOCKER_MESSAGE_TYPES = {
+  blockerLock: "YT_BLOCKER_LOCK",
+  blockerUnlock: "YT_BLOCKER_UNLOCK",
+};
 
 (() => {
   const nativePlay = HTMLMediaElement.prototype.play;

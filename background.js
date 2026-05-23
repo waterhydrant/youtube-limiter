@@ -1,6 +1,5 @@
-import { getLocalDateKey, getDaysSinceLocalDate } from "./dateUtils.js";
-import { STORAGE_KEYS } from "./storageKeys.js";
-import { MESSAGE_TYPES } from "./background_messages.js";
+import { getLocalDateKey, getDaysSinceLocalDate } from "./shared/dateUtils.js";
+import { STORAGE_KEYS } from "./shared/storageKeys.js";
 
 // =========================
 // Constants
@@ -10,6 +9,11 @@ const BLOCK_REASONS = {
   blocked: "blocked",
   usedToday: "usedToday",
   time: "time",
+};
+
+const MESSAGE_TYPES = {
+  youtubePageLoaded: "YOUTUBE_PAGE_LOADED",
+  youtubePageAccessed: "YOUTUBE_PAGE_ACCESSED",
 };
 
 const NEW_SESSION_TRANSITIONS = new Set([

@@ -1,5 +1,12 @@
-import { MESSAGE_TYPES } from "./background_messages.js";
-import { BLOCKER_MESSAGE_TYPES } from "./blocker_messages.js";
+const MESSAGE_TYPES = {
+  youtubePageLoaded: "YOUTUBE_PAGE_LOADED",
+  youtubePageAccessed: "YOUTUBE_PAGE_ACCESSED",
+};
+
+const BLOCKER_MESSAGE_TYPES = {
+  blockerLock: "YT_BLOCKER_LOCK",
+  blockerUnlock: "YT_BLOCKER_UNLOCK",
+};
 
 const AFFIRMATION =
   "I affirm that watching YouTube is the best use of my limited energy right now. I am choosing it intentionally, not because I am avoiding real rest, work, movement, or something more restorative.";
