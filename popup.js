@@ -1,11 +1,12 @@
 import { getDaysSinceLocalDate, getLocalDateKey } from "./dateUtils.js";
+import { STORAGE_KEYS } from "./storageKeys.js";
 
 async function onStartup() {
   const today = getLocalDateKey();
   const data = await chrome.storage.local.get([
-    "lastDate",
-    "blockAllYoutube",
-    "longestStreak",
+    STORAGE_KEYS.lastDate,
+    STORAGE_KEYS.blockAllYoutube,
+    STORAGE_KEYS.longestStreak,
   ]);
 
   const displayElement = document.getElementById("displayStatus");

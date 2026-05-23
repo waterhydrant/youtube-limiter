@@ -1,14 +1,9 @@
 import { getLocalDateKey, getDaysSinceLocalDate } from "./dateUtils.js";
+import { STORAGE_KEYS } from "./storageKeys.js";
 
 // =========================
 // Constants
 // =========================
-
-const STORAGE_KEYS = {
-  lastDate: "lastDate",
-  blockAllYoutube: "blockAllYoutube",
-  longestStreak: "longestStreak",
-};
 
 const MESSAGE_TYPES = {
   youtubePageLoaded: "YOUTUBE_PAGE_LOADED",
