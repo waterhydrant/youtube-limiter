@@ -1,14 +1,10 @@
 import { getLocalDateKey, getDaysSinceLocalDate } from "./dateUtils.js";
 import { STORAGE_KEYS } from "./storageKeys.js";
+import { MESSAGE_TYPES } from "./background_messages.js";
 
 // =========================
 // Constants
 // =========================
-
-const MESSAGE_TYPES = {
-  youtubePageLoaded: "YOUTUBE_PAGE_LOADED",
-  youtubePageAccessed: "YOUTUBE_PAGE_ACCESSED",
-};
 
 const BLOCK_REASONS = {
   blocked: "blocked",

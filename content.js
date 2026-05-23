@@ -1,3 +1,6 @@
+import { MESSAGE_TYPES } from "./background_messages.js";
+import { BLOCKER_MESSAGE_TYPES } from "./blocker_messages.js";
+
 const AFFIRMATION =
   "I affirm that watching YouTube is the best use of my limited energy right now. I am choosing it intentionally, not because I am avoiding real rest, work, movement, or something more restorative.";
 
@@ -8,7 +11,7 @@ function showYoutubeBlocker() {
 
   isOverlayVisible = true;
 
-  window.postMessage({ type: "YT_BLOCKER_LOCK" }, "*");
+  window.postMessage({ type: BLOCKER_MESSAGE_TYPES.blockerLock }, "*");
 
   const host = document.createElement("div");
   document.body.appendChild(host);
@@ -179,8 +182,8 @@ function showYoutubeBlocker() {
     document.removeEventListener("focusin", keepFocusIn, true);
 
     isOverlayVisible = false;
-    window.postMessage({ type: "YT_BLOCKER_UNLOCK" }, "*");
-    chrome.runtime.sendMessage({ type: "YOUTUBE_PAGE_ACCESSED" });
+    window.postMessage({ type: BLOCKER_MESSAGE_TYPES.blockerUnlock }, "*");
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPES.youtubePageAccessed });
   });
 }
 
@@ -223,7 +226,7 @@ function releasePrelock(event) {
 
 chrome.runtime.sendMessage(
   {
-    type: "YOUTUBE_PAGE_LOADED",
+    type: MESSAGE_TYPES.youtubePageLoaded,
   },
   (response) => {
     if (chrome.runtime.lastError) {
