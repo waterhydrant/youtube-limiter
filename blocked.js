@@ -73,8 +73,8 @@ function setupButtons() {
 
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      if (history.length > 1) {
-        history.back();
+      if (history.length > 2) {
+        window.history.go(-2);
       } else {
         location.href = "about:blank";
       }
