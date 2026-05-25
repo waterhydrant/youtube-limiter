@@ -8,12 +8,12 @@ const BLOCKER_MESSAGE_TYPES = {
   blockerUnlock: "YT_BLOCKER_UNLOCK",
 };
 
-const AFFIRMATION =
+const DEFAULT_AFFIRMATION =
   "I affirm that watching YouTube is the best use of my limited energy right now. I am choosing it intentionally, not because I am avoiding real rest, work, movement, or something more restorative.";
 
 let isOverlayVisible = false;
 
-function showYoutubeBlocker() {
+async function showYoutubeBlocker() {
   if (isOverlayVisible) return;
 
   isOverlayVisible = true;
@@ -126,10 +126,14 @@ function showYoutubeBlocker() {
   const popup = document.createElement("div");
   popup.className = "overlay-popup";
 
+  const affirmation =
+    (await chrome.storage.local.get("affirmation")).affirmation ||
+    DEFAULT_AFFIRMATION;
+
   popup.innerHTML = `
     <h2>YouTube is blocked</h2>
     <p class="overlay-subtitle">Type this affirmation to unlock the page.</p>
-    <blockquote class="affirmation-box">${AFFIRMATION}</blockquote>
+    <blockquote id="affirmation-box" class="affirmation-box"></blockquote>
     <textarea id="unlock-input" class="overlay-input" placeholder="Type affirmation here..." autocomplete="off" autofocus></textarea>
     <button id="unlock-btn" class="overlay-btn" disabled>Unlock Page</button>
   `;
@@ -140,11 +144,14 @@ function showYoutubeBlocker() {
   document.documentElement.classList.add("no-scroll");
   document.body.classList.add("no-scroll");
 
+  const affirmationBox = shadowRoot.getElementById("affirmation-box");
+  affirmationBox.textContent = affirmation;
+
   const unlockInput = shadowRoot.getElementById("unlock-input");
   const unlockBtn = shadowRoot.getElementById("unlock-btn");
 
   unlockInput.addEventListener("input", (event) => {
-    if (event.target.value === AFFIRMATION) {
+    if (event.target.value === affirmation) {
       unlockBtn.disabled = false;
     } else {
       unlockBtn.disabled = true;
@@ -243,7 +250,9 @@ chrome.runtime.sendMessage(
     }
 
     if (response?.shouldBlock) {
-      whenBodyReady(showYoutubeBlocker);
+      whenBodyReady(() => {
+        showYoutubeBlocker().catch(console.error);
+      });
       releasePrelock();
     } else {
       releasePrelock();

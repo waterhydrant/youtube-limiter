@@ -3,7 +3,7 @@
     <head>
         <style>
             body {
-                width: 180px;
+                width: 240px;
                 font-family: system-ui, -apple-system, sans-serif;
                 text-align: center;
                 padding: 15px;
@@ -13,9 +13,9 @@
             .stat {
                 margin-bottom: 12px;
                 padding-bottom: 12px;
-                border-bottom: 1px solid #f0f0f0; /* Soft separator */
+                border-bottom: 1px solid #f0f0f0;
             }
-            
+
             .stat:last-of-type {
                 border-bottom: none;
                 margin-bottom: 8px;
@@ -32,15 +32,15 @@
             .status-text {
                 font-size: 22px;
                 font-weight: bold;
-                color: #28a745; /* Green for available */
+                color: #28a745;
             }
 
             .status-text.locked {
-                color: #dc3545; /* Red for used up/locked */
+                color: #dc3545;
             }
 
             .count {
-                font-size: 24px; /* Slightly tamed down from 32px */
+                font-size: 24px;
                 font-weight: bold;
                 color: #3b82f6;
             }
@@ -65,11 +65,18 @@
                 flex-shrink: 0;
             }
 
-            .switch input { opacity: 0; width: 0; height: 0; }
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
 
             .slider {
                 position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 background-color: #ccc;
                 transition: 0.2s;
                 border-radius: 24px;
@@ -87,17 +94,117 @@
                 border-radius: 50%;
             }
 
-            input:checked + .slider { background-color: #dc3545; } /* Red for Disabled state */
-            input:checked + .slider:before { transform: translateX(22px); }
-            .no-transition .slider, .no-transition .slider::before { transition: none !important; }
-            .label-text { font-size: 13px; font-weight: 500; color: #333; }
+            input:checked + .slider {
+                background-color: #dc3545;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+
+            .no-transition .slider,
+            .no-transition .slider::before {
+                transition: none !important;
+            }
+
+            .label-text {
+                font-size: 13px;
+                font-weight: 500;
+                color: #333;
+            }
+
+            .affirmation-section {
+                margin-top: 14px;
+                padding-top: 12px;
+                border-top: 1px solid #f0f0f0;
+                text-align: left;
+            }
+
+            .section-title {
+                font-size: 12px;
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 6px;
+            }
+
+            .section-description {
+                font-size: 11px;
+                line-height: 1.35;
+                color: #666;
+                margin: 0 0 8px;
+            }
+
+            .affirmation-input {
+                width: 100%;
+                min-height: 74px;
+                resize: vertical;
+                box-sizing: border-box;
+                padding: 8px;
+                border: 1px solid #d6d6d6;
+                border-radius: 8px;
+                font: inherit;
+                font-size: 12px;
+                line-height: 1.35;
+                outline: none;
+            }
+
+            .affirmation-input:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+            }
+
+            .affirmation-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 8px;
+            }
+
+            .btn {
+                flex: 1;
+                border: none;
+                border-radius: 7px;
+                padding: 7px 8px;
+                font: inherit;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .btn-primary {
+                background: #3b82f6;
+                color: white;
+            }
+
+            .btn-primary:hover {
+                background: #2563eb;
+            }
+
+            .btn-secondary {
+                background: #f3f4f6;
+                color: #333;
+            }
+
+            .btn-secondary:hover {
+                background: #e5e7eb;
+            }
+
+            .save-status {
+                min-height: 15px;
+                margin-top: 6px;
+                font-size: 11px;
+                color: #28a745;
+                text-align: center;
+            }
+
+            .save-status.error {
+                color: #dc3545;
+            }
         </style>
     </head>
 
     <body>
         <div class="stat">
             <div class="label">YouTube Status</div>
-            <!-- Toggle 'locked' class in JS when session is spent -->
             <div id="displayStatus" class="status-text">Available</div>
         </div>
 
@@ -118,6 +225,31 @@
                 <span class="slider"></span>
             </div>
         </label>
+
+        <section class="affirmation-section">
+            <div class="section-title">Custom Affirmation</div>
+            <p class="section-description">
+                This is the phrase you must type before unlocking YouTube.
+            </p>
+
+            <textarea
+                id="affirmationInput"
+                class="affirmation-input"
+                placeholder="Enter your affirmation..."
+                spellcheck="true"
+            ></textarea>
+
+            <div class="affirmation-actions">
+                <button id="saveAffirmationBtn" class="btn btn-primary" type="button">
+                    Save
+                </button>
+                <button id="resetAffirmationBtn" class="btn btn-secondary" type="button">
+                    Reset
+                </button>
+            </div>
+
+            <div id="affirmationSaveStatus" class="save-status" aria-live="polite"></div>
+        </section>
 
         <script type="module" src="popup.js"></script>
     </body>
