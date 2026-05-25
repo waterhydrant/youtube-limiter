@@ -4,13 +4,33 @@ import { STORAGE_KEYS } from "./shared/storageKeys.js";
 const DEFAULT_AFFIRMATION =
   "I affirm that watching YouTube is the best use of my limited energy right now. I am choosing it intentionally, not because I am avoiding real rest, work, movement, or something more restorative.";
 
+const REDIRECT_RULESET_ID = "ruleset_1";
+
+async function isRedirectEnabled() {
+  const enabledRulesets =
+    await chrome.declarativeNetRequest.getEnabledRulesets();
+  return enabledRulesets.includes(REDIRECT_RULESET_ID);
+}
+
+async function setRedirectEnabled(enabled) {
+  if (enabled) {
+    await chrome.declarativeNetRequest.updateEnabledRulesets({
+      enableRulesetIds: [REDIRECT_RULESET_ID],
+    });
+  } else {
+    await chrome.declarativeNetRequest.updateEnabledRulesets({
+      disableRulesetIds: [REDIRECT_RULESET_ID],
+    });
+  }
+}
+
 async function onStartup() {
   const today = getLocalDateKey();
   const data = await chrome.storage.local.get([
     STORAGE_KEYS.lastDate,
     STORAGE_KEYS.blockAllYoutube,
     STORAGE_KEYS.longestStreak,
-    STORAGE_KEYS.affirmation
+    STORAGE_KEYS.affirmation,
   ]);
 
   const displayElement = document.getElementById("displayStatus");
@@ -35,35 +55,65 @@ async function onStartup() {
   document.getElementById("displayLongestStreak").textContent =
     longestStreak.toString();
 
-  const toggleContainer = document.getElementById("toggleContainer");
-  const blockAllToggle = document.getElementById("blockAllToggle");
+  const blockToggleContainer = document.getElementById("blockToggleContainer");
+  const blockToggle = document.getElementById("blockToggle");
 
-  blockAllToggle.checked = data.blockAllYoutube ?? false;
-  toggleContainer.offsetHeight;
+  const redirectToggleContainer = document.getElementById(
+    "redirectToggleContainer",
+  );
+  const redirectToggle = document.getElementById("redirectToggle");
+
+  blockToggle.checked = data.blockAllYoutube ?? false;
+  redirectToggle.checked = await isRedirectEnabled();
+  blockToggle.offsetHeight;
   requestAnimationFrame(() => {
-    toggleContainer.classList.remove("no-transition");
+    blockToggleContainer.classList.remove("no-transition");
+    redirectToggleContainer.classList.remove("no-transition");
   });
 
-  blockAllToggle.addEventListener("change", () => {
+  blockToggle.addEventListener("change", () => {
     chrome.storage.local.set({
-      blockAllYoutube: blockAllToggle.checked,
+      blockAllYoutube: blockToggle.checked,
     });
+  });
+
+  redirectToggle.addEventListener("change", async () => {
+    await setRedirectEnabled(redirectToggle.checked);
   });
 
   const affirmationInput = document.getElementById("affirmationInput");
   const affirmation = data.affirmation || DEFAULT_AFFIRMATION;
   affirmationInput.value = affirmation;
 
+  let statusClearTimeout = null;
+  const affirmationSaveStatus = document.getElementById(
+    "affirmationSaveStatus",
+  );
+  function showAffirmationStatus(message) {
+    clearTimeout(statusClearTimeout);
+
+    affirmationSaveStatus.textContent = message;
+
+    statusClearTimeout = setTimeout(() => {
+      affirmationSaveStatus.textContent = "";
+    }, 1600);
+  }
+
   const affirmationSaveBtn = document.getElementById("saveAffirmationBtn");
   const affirmationResetBtn = document.getElementById("resetAffirmationBtn");
+
   affirmationSaveBtn.addEventListener("click", async () => {
     const affirmation = affirmationInput.value.trim();
-    await chrome.storage.local.set({affirmation: affirmation});
+    await chrome.storage.local.set({ affirmation: affirmation });
+
+    showAffirmationStatus("Saved");
   });
   affirmationResetBtn.addEventListener("click", () => {
-    chrome.storage.local.set({ affirmation: DEFAULT_AFFIRMATION }); 
+    chrome.storage.local.set({ affirmation: DEFAULT_AFFIRMATION });
     affirmationInput.value = DEFAULT_AFFIRMATION;
-  })
+
+    showAffirmationStatus("Reset to default");
+  });
 }
 
 // Run the function as soon as the popup opens
