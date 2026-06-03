@@ -8,8 +8,120 @@ const BLOCKER_MESSAGE_TYPES = {
   blockerUnlock: "YT_BLOCKER_UNLOCK",
 };
 
+
+const STORAGE_KEYS = {
+  lastDate: "lastDate",
+  blockAllYoutube: "blockAllYoutube",
+  longestStreak: "longestStreak",
+  affirmation: "affirmation",
+  affirmationMode: "affirmationMode",
+};
+
+
 const DEFAULT_AFFIRMATION =
   "I affirm that watching YouTube is the best use of my limited energy right now. I am choosing it intentionally, not because I am avoiding real rest, work, movement, or something more restorative.";
+
+const affirmationGenerator = (() => {
+  const openings = [
+    "I affirm that",
+    "I acknowledge that",
+    "I recognize that",
+    "I understand that",
+    "I am choosing with awareness that"
+  ];
+
+  const youtubeChoices = [
+    "watching YouTube",
+    "spending time on YouTube",
+    "opening YouTube right now",
+    "using YouTube at this moment",
+    "continuing onto YouTube"
+  ];
+
+  const valueStatements = [
+    "is the best use of my limited energy right now",
+    "is genuinely how I want to spend my limited energy right now",
+    "is more worthwhile right now than the alternatives available to me",
+    "is an intentional use of my attention and energy at this moment",
+    "is the choice that best serves me right now",
+    "is worth the time and energy I am about to give it"
+  ];
+
+  const intentionalOpenings = [
+    "I am making this choice intentionally",
+    "I am choosing this deliberately",
+    "This is a conscious choice",
+    "I am proceeding on purpose",
+    "I am deciding this with intention"
+  ];
+
+  const avoidanceStatements = [
+    "not because I am avoiding real rest, meaningful work, movement, or something more restorative",
+    "not as a way to avoid rest, work, movement, or an activity that would actually restore me",
+    "not because it is easier than resting properly, doing meaningful work, moving, or doing something more renewing",
+    "not because I am escaping from work, genuine rest, movement, or something better for my energy",
+    "not as an automatic substitute for rest, progress, movement, or something truly restorative",
+    "not because I am defaulting to stimulation instead of rest, work, movement, or real recovery"
+  ];
+
+  const closings = [
+    "",
+    " I accept that choice.",
+    " I am making that decision honestly.",
+    " I am choosing it with full awareness.",
+    " I accept the tradeoff I am making."
+  ];
+
+  // Prevents the last several affirmations from immediately repeating.
+  const recentAffirmations = [];
+  const MAX_RECENT = 25;
+
+  function randomItem(array) {
+    const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
+    return array[randomValue % array.length];
+  }
+
+  function generate() {
+    let affirmation;
+    let attempts = 0;
+
+    do {
+      const firstSentence =
+        `${randomItem(openings)} ${randomItem(youtubeChoices)} ` +
+        `${randomItem(valueStatements)}.`;
+
+      const secondSentence =
+        `${randomItem(intentionalOpenings)}, ` +
+        `${randomItem(avoidanceStatements)}.`;
+
+      affirmation = firstSentence + " " + secondSentence + randomItem(closings);
+      attempts++;
+    } while (recentAffirmations.includes(affirmation) && attempts < 100);
+
+    recentAffirmations.push(affirmation);
+
+    if (recentAffirmations.length > MAX_RECENT) {
+      recentAffirmations.shift();
+    }
+
+    return affirmation;
+  }
+
+  return { generate };
+})();
+
+async function getRequiredAffirmation() {
+  const data = await chrome.storage.local.get([
+    STORAGE_KEYS.affirmation,
+    STORAGE_KEYS.affirmationMode,
+  ]);
+
+  if (data.affirmationMode === "generated") {
+    return affirmationGenerator.generate();
+  }
+
+  return data.affirmation || DEFAULT_AFFIRMATION;
+}
 
 let isOverlayVisible = false;
 
@@ -128,9 +240,7 @@ async function showYoutubeBlocker() {
   const popup = document.createElement("div");
   popup.className = "overlay-popup";
 
-  const affirmation =
-    (await chrome.storage.local.get("affirmation")).affirmation ||
-    DEFAULT_AFFIRMATION;
+  const affirmation = await getRequiredAffirmation();
 
   popup.innerHTML = `
     <h2>YouTube is blocked</h2>

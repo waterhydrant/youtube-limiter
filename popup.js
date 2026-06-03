@@ -4,6 +4,11 @@ import { STORAGE_KEYS } from "./shared/storageKeys.js";
 const DEFAULT_AFFIRMATION =
   "I affirm that watching YouTube is the best use of my limited energy right now. I am choosing it intentionally, not because I am avoiding real rest, work, movement, or something more restorative.";
 
+const AFFIRMATION_MODES = {
+  CUSTOM: "custom",
+  GENERATED: "generated"
+};
+
 const REDIRECT_RULESET_ID = "ruleset_1";
 
 async function isRedirectEnabled() {
@@ -31,6 +36,7 @@ async function onStartup() {
     STORAGE_KEYS.blockAllYoutube,
     STORAGE_KEYS.longestStreak,
     STORAGE_KEYS.affirmation,
+    STORAGE_KEYS.affirmationMode,
   ]);
 
   const displayElement = document.getElementById("displayStatus");
@@ -82,13 +88,30 @@ async function onStartup() {
   });
 
   const affirmationInput = document.getElementById("affirmationInput");
+  const affirmationDescription = document.getElementById(
+    "affirmationDescription",
+  );
+  const affirmationSaveBtn = document.getElementById("saveAffirmationBtn");
+  const affirmationResetBtn = document.getElementById("resetAffirmationBtn");
+
+  const generatedToggleContainer = document.getElementById(
+    "generatedToggleContainer",
+  );
+  const generatedAffirmationToggle = document.getElementById(
+    "generatedAffirmationToggle",
+  );
+
   const affirmation = data.affirmation || DEFAULT_AFFIRMATION;
   affirmationInput.value = affirmation;
+
+  let affirmationMode =
+    data.affirmationMode || AFFIRMATION_MODES.CUSTOM;
 
   let statusClearTimeout = null;
   const affirmationSaveStatus = document.getElementById(
     "affirmationSaveStatus",
   );
+
   function showAffirmationStatus(message) {
     clearTimeout(statusClearTimeout);
 
@@ -99,17 +122,66 @@ async function onStartup() {
     }, 1600);
   }
 
-  const affirmationSaveBtn = document.getElementById("saveAffirmationBtn");
-  const affirmationResetBtn = document.getElementById("resetAffirmationBtn");
+  function renderAffirmationMode() {
+    const usingGenerated =
+      affirmationMode === AFFIRMATION_MODES.GENERATED;
+
+    generatedAffirmationToggle.checked = usingGenerated;
+
+    affirmationInput.disabled = usingGenerated;
+    affirmationSaveBtn.disabled = usingGenerated;
+    affirmationResetBtn.disabled = usingGenerated;
+
+    affirmationDescription.textContent = usingGenerated
+      ? "A different variation will be generated each time YouTube is unlocked."
+      : "This is the phrase you must type before unlocking YouTube.";
+  }
+
+  renderAffirmationMode();
+
+  generatedToggleContainer.offsetHeight;
+  requestAnimationFrame(() => {
+    generatedToggleContainer.classList.remove("no-transition");
+  });
+
+  generatedAffirmationToggle.addEventListener("change", async () => {
+    affirmationMode = generatedAffirmationToggle.checked
+      ? AFFIRMATION_MODES.GENERATED
+      : AFFIRMATION_MODES.CUSTOM;
+
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.affirmationMode]: affirmationMode,
+    });
+
+    renderAffirmationMode();
+
+    showAffirmationStatus(
+      affirmationMode === AFFIRMATION_MODES.GENERATED
+        ? "Using generated variations"
+        : "Using custom affirmation",
+    );
+  });
 
   affirmationSaveBtn.addEventListener("click", async () => {
     const affirmation = affirmationInput.value.trim();
-    await chrome.storage.local.set({ affirmation: affirmation });
+
+    if (!affirmation) {
+      showAffirmationStatus("Affirmation cannot be empty");
+      return;
+    }
+
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.affirmation]: affirmation,
+    });
 
     showAffirmationStatus("Saved");
   });
-  affirmationResetBtn.addEventListener("click", () => {
-    chrome.storage.local.set({ affirmation: DEFAULT_AFFIRMATION });
+
+  affirmationResetBtn.addEventListener("click", async () => {
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.affirmation]: DEFAULT_AFFIRMATION,
+    });
+
     affirmationInput.value = DEFAULT_AFFIRMATION;
 
     showAffirmationStatus("Reset to default");

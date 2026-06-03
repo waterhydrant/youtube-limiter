@@ -215,6 +215,21 @@
             .save-status.error {
                 color: #dc3545;
             }
+
+            .affirmation-input:disabled {
+                background: #f3f4f6;
+                color: #888;
+                cursor: not-allowed;
+            }
+            
+            .btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            
+            .btn:disabled:active {
+                transform: none;
+            }
         </style>
     </head>
 
@@ -250,18 +265,26 @@
         </label>
 
         <section class="affirmation-section">
-            <div class="section-title">Custom Affirmation</div>
-            <p class="section-description">
+            <div class="section-title">Unlock Affirmation</div>
+            <p id="affirmationDescription" class="section-description">
                 This is the phrase you must type before unlocking YouTube.
             </p>
-
+        
+            <label class="switch-container normal no-transition" id="generatedToggleContainer">
+                <span class="label-text">Generated Variations</span>
+                <div class="switch">
+                    <input id="generatedAffirmationToggle" type="checkbox" />
+                    <span class="slider"></span>
+                </div>
+            </label>
+        
             <textarea
                 id="affirmationInput"
                 class="affirmation-input"
                 placeholder="Enter your affirmation..."
                 spellcheck="true"
             ></textarea>
-
+        
             <div class="affirmation-actions">
                 <button id="saveAffirmationBtn" class="btn btn-primary" type="button">
                     Save
@@ -270,10 +293,10 @@
                     Reset
                 </button>
             </div>
-
+        
             <div id="affirmationSaveStatus" class="save-status" aria-live="polite"></div>
         </section>
-
+        
         <script type="module" src="popup.js"></script>
     </body>
 </html>
