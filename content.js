@@ -195,7 +195,7 @@ async function showYoutubeBlocker() {
 
     .overlay-input {
         width: 100%;
-        min-height: 96px;
+        min-height: 120px;
         resize: none;
         overflow-y: auto;
         scrollbar-gutter: stable;
