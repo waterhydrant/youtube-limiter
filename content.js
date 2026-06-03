@@ -47,7 +47,7 @@ async function showYoutubeBlocker() {
         background: #f8f8f7;
         padding: 32px 40px;
         border-radius: 14px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
         font-family: Arial, sans-serif;
         max-width: 560px;
         text-align: center;
