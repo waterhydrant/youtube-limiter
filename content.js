@@ -44,7 +44,7 @@ async function showYoutubeBlocker() {
     }
 
     .overlay-popup {
-        background: white;
+        background: #f8f8f7;
         padding: 32px 40px;
         border-radius: 14px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
@@ -72,10 +72,10 @@ async function showYoutubeBlocker() {
     .affirmation-box {
         margin: 0 auto 22px;
         padding: 14px 18px;
-        background: #f6f7f8;
-        border-left: 3px solid #f59e0b;
+        background: #eceff1;
+        border-left: 3px solid #7a8793;
         border-radius: 8px;
-        color: #333;
+        color: #2f3437;
         font-size: 16px;
         line-height: 1.45;
         text-align: left;
@@ -99,11 +99,11 @@ async function showYoutubeBlocker() {
     }
 
     .overlay-input:focus {
-        border-color: #007bff;
+        border-color: #6b7280;
     }
 
     .overlay-btn {
-        background-color: #007bff;
+        background-color: #5b6470;
         color: white;
         border: none;
         padding: 11px 24px;
@@ -114,8 +114,8 @@ async function showYoutubeBlocker() {
     }
 
     .overlay-btn:disabled {
-        background-color: #d4d4d4;
-        color: #666;
+        background-color: #d1d5db;
+        color: #6b7280;
         cursor: not-allowed;
     }
 
