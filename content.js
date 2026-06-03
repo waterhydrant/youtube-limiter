@@ -33,7 +33,9 @@ async function showYoutubeBlocker() {
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: grayscale(100%) brightness(55%);
+        -webkit-backdrop-filter: grayscale(100%) brightness(55%);
         z-index: 2147483647;
         display: flex;
         justify-content: center;
