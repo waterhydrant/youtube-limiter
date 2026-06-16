@@ -4,7 +4,11 @@ A Chrome extension that aims to limit one's usage of YouTube by increasing the f
 
 ## Screenshots
 
+### Affirmation Popup
+
 ![Affirmation popup upon logging on](docs/screenshots/affirmation_popup.png)
+
+### Stats and Settings
 
 ![Extension popup with settings and stats](docs/screenshots/extension_popup.png)
 
@@ -20,7 +24,7 @@ Instead of directly blocking YouTube like many blockers, this extension aims to 
 
 ## Installation
 
-Installing this extension is very simple with a few easy steps. This extension can be installed on any Chromium-based browser.
+This extension can be installed in Chrome or any Chromium-based browser.
 
 1. Download or clone this repository:
 
@@ -28,11 +32,11 @@ Installing this extension is very simple with a few easy steps. This extension c
 git clone https://github.com/waterhydrant/youtube-limiter.git
 ```
 
-Alternatively, you can click on the "Code" dropdown button in the main GitHub page and select "Download ZIP" and unzip the file. 
+Alternatively, click on the "Code" dropdown on the GitHub repository page, select "Download ZIP", and unzip the downloaded file.
 
-2. Open Chrome or another compatible browser and go to `chrome://extensions`
-3. Click the "Enable Developer Mode" toggle in the top-right corner.
+2. Open Chrome or another Chromium-based browser and go to `chrome://extensions`
+3. Enable Developer mode using the toggle in the top-right corner.
 4. Click "Load Unpacked".
-5. Select the extension folder that you have cloned or downloaded.
-6. Open YouTube and click the extension icon in the Chrome toolbar to enable it.
+5. Select the extension folder that you cloned or unzipped.
+6. Open YouTube and click the extension icon in the browser toolbar to use it.
 
