@@ -152,6 +152,15 @@ function isNewYoutubeSession(details) {
   );
 }
 
+function isYoutubeUrl(url) {
+  try {
+    const hostname = new URL(url).hostname;
+    return hostname === "youtube.com" || hostname.endsWith(".youtube.com");
+  } catch {
+    return false;
+  }
+}
+
 async function redirectToBlockedPage(tabId, reason) {
   await chrome.tabs.update(tabId, {
     url: chrome.runtime.getURL(`blocked.html?reason=${reason}`),
@@ -176,6 +185,16 @@ function waitForSessionDecision(tabId, timeoutMs = 1000) {
   });
 
   return promise;
+}
+
+function clearTabSession(tabId) {
+  youtubeSessions.delete(tabId);
+
+  const resolve = pendingResolvers.get(tabId);
+  if (resolve) {
+    pendingResolvers.delete(tabId);
+    resolve(false);
+  }
 }
 
 // =========================
@@ -215,6 +234,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // =========================
 // Navigation tracking
 // =========================
+
+chrome.webNavigation.onCommitted.addListener((details) => {
+  if (!isTopFrameNavigation(details)) return;
+  if (isYoutubeUrl(details.url)) return;
+  clearTabSession(details.tabId);
+});
 
 chrome.webNavigation.onCommitted.addListener(
   async (details) => {
@@ -282,11 +307,5 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
-  youtubeSessions.delete(tabId);
-
-  const resolve = pendingResolvers.get(tabId);
-  if (resolve) {
-    pendingResolvers.delete(tabId);
-    resolve(false);
-  }
+  clearTabSession(tabId);
 });
